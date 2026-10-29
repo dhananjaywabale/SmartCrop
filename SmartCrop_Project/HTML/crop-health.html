@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crop Health - SmartCrop</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- Leaflet CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f9f4;
+            color: #333;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 18px 6%;
+
+            background: #176b22;
+
+            color: white;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #c8e6c9;
+        }
+
+        /* HEADER */
+
+        .health-header {
+
+            padding: 65px 6%;
+
+            background: linear-gradient(
+                135deg,
+                #e9f8e9,
+                #cdeccd
+            );
+        }
+
+        .health-header h1 {
+
+            margin: 0 0 15px;
+
+            color: #176b22;
+
+            font-size: 38px;
+        }
+
+        .health-header p {
+
+            margin: 0;
+
+            font-size: 18px;
+
+            color: #444;
+        }
+
+        /* CONTAINER */
+
+        .health-container {
+
+            width: 88%;
+
+            max-width: 1200px;
+
+            margin: 45px auto;
+        }
+
+        /* CARDS */
+
+        .health-grid {
+
+            display: grid;
+
+            grid-template-columns:
+            repeat(4, 1fr);
+
+            gap: 22px;
+
+            margin-bottom: 32px;
+        }
+
+        .health-card {
+
+            background: white;
+
+            padding: 30px 20px;
+
+            border-radius: 16px;
+
+            text-align: center;
+
+            box-shadow:
+            0 6px 20px rgba(0,0,0,0.08);
+
+            transition: 0.3s;
+        }
+
+        .health-card:hover {
+
+            transform: translateY(-7px);
+
+            box-shadow:
+            0 12px 28px rgba(0,0,0,0.13);
+        }
+
+        .health-card .icon {
+
+            font-size: 45px;
+
+            margin-bottom: 12px;
+        }
+
+        .health-card h2 {
+
+            color: #237b2c;
+
+            margin: 8px 0;
+        }
+
+        .health-card p {
+
+            color: #666;
+        }
+
+        /* BOX */
+
+        .health-box {
+
+            background: white;
+
+            padding: 32px;
+
+            border-radius: 16px;
+
+            box-shadow:
+            0 6px 20px rgba(0,0,0,0.08);
+
+            margin-bottom: 28px;
+        }
+
+        .health-box h2 {
+
+            color: #237b2c;
+
+            margin-top: 0;
+
+            margin-bottom: 20px;
+        }
+
+        /* PROGRESS */
+
+        .progress-container {
+
+            width: 100%;
+
+            height: 20px;
+
+            background: #e1e1e1;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress-bar {
+
+            width: 68%;
+
+            height: 100%;
+
+            background:
+            linear-gradient(
+                90deg,
+                #66bb6a,
+                #2e7d32
+            );
+
+            border-radius: 20px;
+        }
+
+        .moisture-info {
+
+            display: flex;
+
+            justify-content:
+            space-between;
+
+            margin-top: 8px;
+
+            color: #666;
+        }
+
+        /* STATUS */
+
+        .status {
+
+            display: inline-block;
+
+            padding: 10px 24px;
+
+            background: #c8e6c9;
+
+            color: #1b5e20;
+
+            border-radius: 30px;
+
+            font-weight: bold;
+        }
+
+        /* LIST */
+
+        .health-list {
+
+            list-style: none;
+
+            padding: 0;
+
+            margin-top: 22px;
+        }
+
+        .health-list li {
+
+            background: #f4faf4;
+
+            padding: 15px 18px;
+
+            margin-bottom: 11px;
+
+            border-left:
+            5px solid #2e7d32;
+
+            border-radius: 7px;
+        }
+
+        /* =========================
+           SATELLITE MAP
+        ========================= */
+
+        .satellite-box {
+
+            width: 100%;
+
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            border: 2px solid #81c784;
+
+            background: #e8f5e9;
+        }
+
+        #satelliteMap {
+
+            width: 100%;
+
+            height: 450px;
+        }
+
+        .map-info {
+
+            padding: 15px 20px;
+
+            background: #f1f8f1;
+
+            color: #555;
+
+            font-size: 14px;
+        }
+
+        .location-btn {
+
+            margin-bottom: 15px;
+
+            padding: 11px 20px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2e7d32;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .location-btn:hover {
+
+            background: #1b5e20;
+
+            transform: translateY(-2px);
+        }
+
+        /* BUTTON */
+
+        .home-btn {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 12px 25px;
+
+            background: #2e7d32;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+        }
+
+        .home-btn:hover {
+
+            background: #1b5e20;
+        }
+
+        /* FOOTER */
+
+        footer {
+
+            background: #176b22;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 28px;
+
+            margin-top: 50px;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:950px) {
+
+            .health-grid {
+
+                grid-template-columns:
+                repeat(2,1fr);
+            }
+
+            .navbar {
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+        }
+
+        @media(max-width:600px) {
+
+            .health-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .health-container {
+
+                width: 92%;
+            }
+
+            .health-header h1 {
+
+                font-size: 29px;
+            }
+
+            #satelliteMap {
+
+                height: 350px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌱 SmartCrop
+    </div>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="dashboard.html">Dashboard</a>
+
+        <a href="crop-advisory.html">
+            Crop Advisory
+        </a>
+
+        <a href="crop-health.html">
+            Crop Health
+        </a>
+
+        <a href="marketplace.html">
+            Marketplace
+        </a>
+
+        <a href="weather.html">
+            Weather
+        </a>
+
+        <a href="profile.html">
+            Profile
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- HEADER -->
+
+<section class="health-header">
+
+    <h1>
+        🌱 Crop Health Monitoring
+    </h1>
+
+    <p>
+        Monitor crop condition, soil moisture,
+        pests, diseases and growth stage.
+    </p>
+
+</section>
+
+
+<!-- MAIN -->
+
+<div class="health-container">
+
+
+    <!-- HEALTH CARDS -->
+
+    <div class="health-grid">
+
+
+        <div class="health-card">
+
+            <div class="icon">
+                🌿
+            </div>
+
+            <h2>
+                Healthy
+            </h2>
+
+            <p>
+                Overall Crop Health
+            </p>
+
+        </div>
+
+
+        <div class="health-card">
+
+            <div class="icon">
+                💧
+            </div>
+
+            <h2>
+                68%
+            </h2>
+
+            <p>
+                Soil Moisture
+            </p>
+
+        </div>
+
+
+        <div class="health-card">
+
+            <div class="icon">
+                🐛
+            </div>
+
+            <h2>
+                Low Risk
+            </h2>
+
+            <p>
+                Pest / Disease
+            </p>
+
+        </div>
+
+
+        <div class="health-card">
+
+            <div class="icon">
+                🌱
+            </div>
+
+            <h2>
+                Vegetative
+            </h2>
+
+            <p>
+                Growth Stage
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SOIL MOISTURE -->
+
+    <div class="health-box">
+
+        <h2>
+            💧 Soil Moisture Level
+        </h2>
+
+        <p>
+            Current soil moisture:
+            <strong>68%</strong>
+        </p>
+
+        <div class="progress-container">
+
+            <div class="progress-bar"></div>
+
+        </div>
+
+        <div class="moisture-info">
+
+            <span>
+                Dry
+            </span>
+
+            <span>
+                Optimal
+            </span>
+
+            <span>
+                Wet
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- CROP STATUS -->
+
+    <div class="health-box">
+
+        <h2>
+            🚨 Crop Health Status
+        </h2>
+
+        <span class="status">
+            ✓ Healthy
+        </span>
+
+        <ul class="health-list">
+
+            <li>
+                🌿 Crop growth is normal.
+            </li>
+
+            <li>
+                💧 Soil moisture level is suitable.
+            </li>
+
+            <li>
+                🐛 Pest and disease risk is low.
+            </li>
+
+            <li>
+                🌱 Crop is currently in vegetative stage.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- =========================
+         SATELLITE MONITORING
+    ========================= -->
+
+    <div class="health-box">
+
+        <h2>
+            🛰️ Satellite Monitoring
+        </h2>
+
+        <p>
+            View satellite imagery for your
+            farming location.
+        </p>
+
+        <button
+            class="location-btn"
+            onclick="useMyLocation()">
+
+            📍 Use My Location
+
+        </button>
+
+
+        <div class="satellite-box">
+
+            <div id="satelliteMap"></div>
+
+            <div class="map-info">
+
+                🛰️ Satellite imagery map is
+                displayed using live map tiles.
+
+                <br>
+
+                📍 Default location:
+                Kopargaon, Maharashtra
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="health-box">
+
+        <h2>
+            📊 Health Summary
+        </h2>
+
+        <p>
+            Your crop is currently in good condition.
+            Soil moisture is at a suitable level and
+            the detected pest or disease risk is low.
+            The crop is currently in the vegetative
+            growth stage.
+        </p>
+
+        <p>
+            Continue regular field monitoring and
+            follow weather-based farming recommendations.
+        </p>
+
+        <a
+            href="index.html"
+            class="home-btn">
+
+            🏠 Back to Home
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        © 2026 SmartCrop. All Rights Reserved.
+    </p>
+
+    <p>
+        Smart Crop Advisory & Marketplace Platform
+    </p>
+
+</footer>
+
+
+<!-- LEAFLET JS -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+    /* =========================
+       DEFAULT FARM LOCATION
+       Kopargaon
+    ========================= */
+
+    let defaultLat = 19.8825;
+    let defaultLng = 74.4760;
+
+
+    /* CREATE MAP */
+
+    const map = L.map("satelliteMap").setView(
+        [defaultLat, defaultLng],
+        15
+    );
+
+
+    /* SATELLITE IMAGERY */
+
+    L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+            maxZoom: 19,
+
+            attribution:
+                "Satellite imagery © Esri"
+        }
+    ).addTo(map);
+
+
+    /* MARKER */
+
+    let marker = L.marker(
+        [defaultLat, defaultLng]
+    ).addTo(map);
+
+
+    marker.bindPopup(
+        "<b>🌱 SmartCrop Farm</b><br>Kopargaon, Maharashtra"
+    ).openPopup();
+
+
+    /* =========================
+       MY LOCATION
+    ========================= */
+
+    function useMyLocation() {
+
+        if (!navigator.geolocation) {
+
+            alert(
+                "Your browser does not support location."
+            );
+
+            return;
+        }
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+                const lat =
+                    position.coords.latitude;
+
+                const lng =
+                    position.coords.longitude;
+
+
+                map.setView(
+                    [lat, lng],
+                    17
+                );
+
+
+                marker.setLatLng(
+                    [lat, lng]
+                );
+
+
+                marker.bindPopup(
+                    "<b>📍 Your Location</b><br>" +
+                    "SmartCrop monitoring area"
+                ).openPopup();
+
+            },
+
+            function(error) {
+
+                alert(
+                    "Location access denied. " +
+                    "Please allow location permission."
+                );
+
+            }
+
+        );
+
+    }
+
+</script>
+
+
+<script src="../js/script.js"></script>
+
+
+</body>
+
+</html>

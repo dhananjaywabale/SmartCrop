@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings - SmartCrop</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+
+        <div class="logo">
+            🌱 SmartCrop
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="crop-advisory.html">Crop Advisory</a>
+            <a href="marketplace.html">Marketplace</a>
+            <a href="weather.html">Weather</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="login.html" class="login-btn">Login</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Settings Section -->
+    <section class="login-section">
+
+        <div class="login-box">
+
+            <h1>⚙️ Settings</h1>
+
+            <p>Manage your SmartCrop preferences</p>
+
+
+            <!-- Notification Preferences -->
+            <h2>🔔 Notification Preferences</h2>
+
+            <form onsubmit="saveSettings(event)">
+
+                <label>
+                    Notification Type
+                </label>
+
+                <select id="notificationType">
+
+                    <option value="inapp">In-App Alerts</option>
+                    <option value="push">Push Notifications</option>
+                    <option value="sms">SMS Alerts</option>
+                    <option value="email">Email Updates</option>
+
+                </select>
+
+
+                <label>
+                    Alert Frequency
+                </label>
+
+                <select id="alertFrequency">
+
+                    <option value="instant">Instant</option>
+                    <option value="daily">Daily Summary</option>
+                    <option value="weekly">Weekly Summary</option>
+
+                </select>
+
+
+                <!-- Account Security -->
+                <h2 style="margin-top: 30px;">
+                    🔐 Account Security
+                </h2>
+
+                <label>
+                    Change Password
+                </label>
+
+                <input
+                    type="password"
+                    id="newPassword"
+                    placeholder="Enter new password"
+                >
+
+
+                <label>
+                    Two-Factor Authentication
+                </label>
+
+                <select id="twoFactor">
+
+                    <option value="disabled">Disabled</option>
+                    <option value="enabled">Enabled</option>
+
+                </select>
+
+
+                <!-- Language -->
+                <h2 style="margin-top: 30px;">
+                    🌐 Language
+                </h2>
+
+                <label>
+                    Select Language
+                </label>
+
+                <select id="language">
+
+                    <option value="en">English</option>
+                    <option value="mr">मराठी</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="ja">日本語</option>
+
+                </select>
+
+
+                <!-- Units and Currency -->
+                <h2 style="margin-top: 30px;">
+                    📏 Units & Currency
+                </h2>
+
+                <label>
+                    Farm Area Unit
+                </label>
+
+                <select id="areaUnit">
+
+                    <option value="acre">Acres</option>
+                    <option value="hectare">Hectares</option>
+
+                </select>
+
+
+                <label>
+                    Produce Weight Unit
+                </label>
+
+                <select id="weightUnit">
+
+                    <option value="quintal">Quintal</option>
+                    <option value="kg">Kilogram</option>
+                    <option value="ton">Ton</option>
+
+                </select>
+
+
+                <label>
+                    Currency
+                </label>
+
+                <select id="currency">
+
+                    <option value="inr">₹ INR</option>
+                    <option value="usd">$ USD</option>
+
+                </select>
+
+
+                <!-- Privacy Settings -->
+                <h2 style="margin-top: 30px;">
+                    🛡️ Privacy Settings
+                </h2>
+
+                <label>
+                    Profile Visibility
+                </label>
+
+                <select id="profileVisibility">
+
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+
+                </select>
+
+
+                <label>
+                    Share Farm Location
+                </label>
+
+                <select id="locationSharing">
+
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+
+                </select>
+
+
+                <label>
+                    Third-Party Data Access
+                </label>
+
+                <select id="thirdParty">
+
+                    <option value="allowed">Allowed</option>
+                    <option value="blocked">Blocked</option>
+
+                </select>
+
+
+                <!-- Save Button -->
+                <button
+                    type="submit"
+                    class="btn login-submit">
+                    💾 Save Settings
+                </button>
+
+            </form>
+
+
+            <a href="dashboard.html" class="back-home">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © <span class="current-year"></span> SmartCrop.
+            All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="../js/script.js"></script>
+
+    <script>
+
+        function saveSettings(event) {
+
+            event.preventDefault();
+
+            const language =
+                document.getElementById("language").value;
+
+            if (language === "mr") {
+
+                alert("Settings saved successfully! भाषा मराठी निवडली आहे.");
+
+            }
+            else if (language === "hi") {
+
+                alert("Settings saved successfully! हिंदी भाषा चुनी गई है.");
+
+            }
+            else if (language === "ja") {
+
+                alert("Settings saved successfully! 日本語が選択されました。");
+
+            }
+            else {
+
+                alert("Settings saved successfully!");
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>

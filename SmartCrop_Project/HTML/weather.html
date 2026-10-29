@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weather - SmartCrop</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9, #e3f2fd);
+            overflow-x: hidden;
+        }
+
+
+        /* =========================
+           FLOATING CARTOON ELEMENTS
+        ========================== */
+
+        .floating {
+            position: fixed;
+            font-size: 35px;
+            z-index: -1;
+            opacity: 0.65;
+            animation: floatAround 7s ease-in-out infinite;
+        }
+
+        .cloud1 {
+            top: 120px;
+            left: 5%;
+        }
+
+        .cloud2 {
+            top: 300px;
+            right: 5%;
+            animation-delay: 2s;
+        }
+
+        .sun {
+            top: 80px;
+            right: 10%;
+            animation: sunRotate 8s linear infinite;
+        }
+
+        .plant {
+            bottom: 80px;
+            left: 4%;
+            animation-delay: 1s;
+        }
+
+        .farmer {
+            bottom: 100px;
+            right: 4%;
+            animation-delay: 3s;
+        }
+
+
+        @keyframes floatAround {
+
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+
+        }
+
+
+        @keyframes sunRotate {
+
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+
+        }
+
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        .weather-header {
+
+            position: relative;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(27, 94, 32, 0.95),
+                    rgba(46, 125, 50, 0.85)
+                );
+
+            color: white;
+
+            padding: 65px 6%;
+
+            overflow: hidden;
+
+            animation: headerDown 1s ease;
+
+        }
+
+
+        .weather-header::before {
+
+            content: "☁️";
+
+            position: absolute;
+
+            font-size: 100px;
+
+            right: 12%;
+
+            top: 20px;
+
+            opacity: 0.25;
+
+            animation: cloudMove 8s infinite ease-in-out;
+
+        }
+
+
+        .weather-header::after {
+
+            content: "☀️";
+
+            position: absolute;
+
+            font-size: 80px;
+
+            right: 25%;
+
+            bottom: 10px;
+
+            opacity: 0.25;
+
+            animation: sunRotate 10s linear infinite;
+
+        }
+
+
+        @keyframes headerDown {
+
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        @keyframes cloudMove {
+
+            0% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(-40px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+
+        }
+
+
+        .weather-header h1 {
+
+            font-size: 38px;
+
+            margin-bottom: 12px;
+
+            text-shadow:
+                2px 3px 5px rgba(0,0,0,0.25);
+
+        }
+
+
+        .weather-header p {
+
+            font-size: 18px;
+
+            opacity: 0.95;
+
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================== */
+
+        .weather-container {
+
+            width: 90%;
+
+            max-width: 1150px;
+
+            margin: 40px auto;
+
+            position: relative;
+
+        }
+
+
+        /* =========================
+           LOCATION BOX
+        ========================== */
+
+        .location-box {
+
+            background: rgba(255,255,255,0.95);
+
+            padding: 28px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.10);
+
+            margin-bottom: 30px;
+
+            animation: slideUp 0.8s ease;
+
+            border: 2px solid #e8f5e9;
+
+        }
+
+
+        .location-box label {
+
+            font-weight: bold;
+
+            color: #1b5e20;
+
+            font-size: 17px;
+
+        }
+
+
+        .location-box select {
+
+            padding: 12px 18px;
+
+            border: 2px solid #a5d6a7;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            margin-left: 8px;
+
+            cursor: pointer;
+
+            background: white;
+
+        }
+
+
+        .location-box select:focus {
+
+            border-color: #2e7d32;
+
+            box-shadow: 0 0 10px rgba(46,125,50,0.2);
+
+        }
+
+
+        /* =========================
+           LOCATION BUTTON
+        ========================== */
+
+        .location-btn {
+
+            margin-left: 12px;
+
+            padding: 12px 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #43a047,
+                    #1b5e20
+                );
+
+            color: white;
+
+            border: none;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 5px 12px rgba(46,125,50,0.25);
+
+        }
+
+
+        .location-btn:hover {
+
+            transform:
+                translateY(-3px)
+                scale(1.03);
+
+            box-shadow:
+                0 8px 18px rgba(46,125,50,0.35);
+
+        }
+
+
+        .location-btn:active {
+
+            transform: scale(0.96);
+
+        }
+
+
+        .weather-status {
+
+            margin-top: 18px;
+
+            color: #2e7d32;
+
+            font-weight: bold;
+
+            padding: 10px;
+
+            background: #f1f8e9;
+
+            border-radius: 8px;
+
+        }
+
+
+        /* =========================
+           WEATHER CARDS
+        ========================== */
+
+        .weather-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 22px;
+
+            margin-bottom: 35px;
+
+        }
+
+
+        .weather-card {
+
+            position: relative;
+
+            background:
+                rgba(255,255,255,0.96);
+
+            padding: 30px 20px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.10);
+
+            transition:
+                transform 0.35s,
+                box-shadow 0.35s;
+
+            animation:
+                cardAppear 0.8s ease forwards;
+
+            overflow: hidden;
+
+        }
+
+
+        .weather-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .weather-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .weather-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .weather-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+
+        .weather-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 100px;
+
+            height: 100px;
+
+            background: #e8f5e9;
+
+            border-radius: 50%;
+
+            top: -50px;
+
+            right: -50px;
+
+        }
+
+
+        .weather-card:hover {
+
+            transform:
+                translateY(-10px)
+                scale(1.03);
+
+            box-shadow:
+                0 15px 35px rgba(0,0,0,0.16);
+
+        }
+
+
+        @keyframes cardAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(40px)
+                    scale(0.95);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+
+            }
+
+        }
+
+
+        .weather-icon {
+
+            font-size: 55px;
+
+            margin-bottom: 12px;
+
+            animation:
+                iconBounce 3s ease-in-out infinite;
+
+        }
+
+
+        .weather-card:nth-child(2)
+        .weather-icon {
+
+            animation-delay: 0.5s;
+
+        }
+
+
+        .weather-card:nth-child(3)
+        .weather-icon {
+
+            animation-delay: 1s;
+
+        }
+
+
+        .weather-card:nth-child(4)
+        .weather-icon {
+
+            animation-delay: 1.5s;
+
+        }
+
+
+        @keyframes iconBounce {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+
+        }
+
+
+        .weather-card h2 {
+
+            color: #2e7d32;
+
+            font-size: 30px;
+
+            margin: 8px 0;
+
+        }
+
+
+        .weather-card p {
+
+            color: #666;
+
+            font-weight: bold;
+
+            margin: 0;
+
+        }
+
+
+        /* =========================
+           BOX SECTIONS
+        ========================== */
+
+        .weather-box {
+
+            background:
+                rgba(255,255,255,0.97);
+
+            padding: 30px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.09);
+
+            margin-bottom: 28px;
+
+            animation: slideUp 0.9s ease;
+
+        }
+
+
+        @keyframes slideUp {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(30px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+
+        .weather-box h2 {
+
+            color: #1b5e20;
+
+            margin-bottom: 22px;
+
+            font-size: 24px;
+
+        }
+
+
+        /* =========================
+           ALERT
+        ========================== */
+
+        .alert {
+
+            padding: 18px;
+
+            margin-bottom: 13px;
+
+            border-left:
+                6px solid #43a047;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #f1f8e9,
+                    #ffffff
+                );
+
+            border-radius: 10px;
+
+            animation:
+                alertSlide 0.6s ease;
+
+            transition: 0.3s;
+
+        }
+
+
+        .alert:hover {
+
+            transform: translateX(5px);
+
+            box-shadow:
+                0 5px 15px rgba(0,0,0,0.08);
+
+        }
+
+
+        @keyframes alertSlide {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateX(-20px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateX(0);
+
+            }
+
+        }
+
+
+        .alert strong {
+
+            color: #1b5e20;
+
+            font-size: 17px;
+
+        }
+
+
+        .alert p {
+
+            margin-bottom: 0;
+
+            color: #555;
+
+        }
+
+
+        /* =========================
+           SETTINGS
+        ========================== */
+
+        .settings-form {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 22px;
+
+        }
+
+
+        .setting-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        .setting-group label {
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+            color: #333;
+
+        }
+
+
+        .setting-group input,
+        .setting-group select {
+
+            padding: 13px;
+
+            border:
+                2px solid #ddd;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            transition: 0.3s;
+
+        }
+
+
+        .setting-group input:focus,
+        .setting-group select:focus {
+
+            border-color: #43a047;
+
+            box-shadow:
+                0 0 8px
+                rgba(67,160,71,0.18);
+
+        }
+
+
+        .save-button {
+
+            grid-column: 1 / -1;
+
+            border: none;
+
+            cursor: pointer;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #43a047,
+                    #1b5e20
+                );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            transition: 0.3s;
+
+        }
+
+
+        .save-button:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 8px 18px
+                rgba(46,125,50,0.3);
+
+        }
+
+
+        /* =========================
+           API INFO
+        ========================== */
+
+        .api-info {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e8f5e9,
+                    #f1f8e9
+                );
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            color: #1b5e20;
+
+            border-left:
+                6px solid #43a047;
+
+        }
+
+
+        .api-info p {
+
+            margin: 5px 0;
+
+        }
+
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loading {
+
+            color: #2e7d32;
+
+            font-weight: bold;
+
+            animation:
+                pulse 1.2s infinite;
+
+        }
+
+
+        @keyframes pulse {
+
+            0%,100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.45;
+            }
+
+        }
+
+
+        .error {
+
+            color: #c62828;
+
+            font-weight: bold;
+
+            background: #ffebee;
+
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+
+            margin-top: 50px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1b5e20,
+                    #2e7d32
+                );
+
+            color: white;
+
+        }
+
+
+        footer p {
+
+            margin: 7px;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 900px) {
+
+            .weather-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .weather-header h1 {
+
+                font-size: 28px;
+
+            }
+
+
+            .weather-grid,
+            .settings-form {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .save-button {
+
+                grid-column: auto;
+
+            }
+
+
+            .location-btn {
+
+                margin-left: 0;
+
+                margin-top: 12px;
+
+                width: 100%;
+
+            }
+
+
+            .location-box select {
+
+                margin-top: 10px;
+
+                margin-left: 0;
+
+                width: 100%;
+
+            }
+
+
+            .floating {
+
+                display: none;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- FLOATING CARTOONS -->
+
+<div class="floating cloud1">☁️</div>
+<div class="floating cloud2">🌦️</div>
+<div class="floating sun">☀️</div>
+<div class="floating plant">🌱</div>
+<div class="floating farmer">👨‍🌾</div>
+
+
+<!-- NAVIGATION -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌱 SmartCrop
+    </div>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="dashboard.html">Dashboard</a>
+
+        <a href="crop-advisory.html">Crop Advisory</a>
+
+        <a href="crop-health.html">Crop Health</a>
+
+        <a href="marketplace.html">Marketplace</a>
+
+        <a href="weather.html">Weather</a>
+
+        <a href="profile.html">Profile</a>
+
+    </div>
+
+</nav>
+
+
+<!-- HEADER -->
+
+<section class="weather-header">
+
+    <h1>
+        🌦️ Smart Weather Monitoring
+    </h1>
+
+    <p>
+        🌱 Monitor live weather conditions and protect your crops smarter.
+    </p>
+
+</section>
+
+
+<!-- MAIN -->
+
+<div class="weather-container">
+
+
+    <!-- LOCATION -->
+
+    <div class="location-box">
+
+        <label for="location">
+            📍 Select Location:
+        </label>
+
+        <select id="location" onchange="changeLocation()">
+
+            <option value="Kopargaon">
+                Kopargaon
+            </option>
+
+            <option value="Shirdi">
+                Shirdi
+            </option>
+
+            <option value="Nashik">
+                Nashik
+            </option>
+
+            <option value="Pune">
+                Pune
+            </option>
+
+        </select>
+
+
+        <button
+            type="button"
+            class="location-btn"
+            onclick="getMyLocation()"
+        >
+            📍 Use My Location
+        </button>
+
+
+        <div id="status" class="weather-status">
+
+            🔄 Loading live weather...
+
+        </div>
+
+    </div>
+
+
+    <!-- WEATHER CARDS -->
+
+    <div class="weather-grid">
+
+
+        <div class="weather-card">
+
+            <div class="weather-icon">
+                🌡️
+            </div>
+
+            <h2 id="temperature">
+                --°C
+            </h2>
+
+            <p>
+                Temperature
+            </p>
+
+        </div>
+
+
+        <div class="weather-card">
+
+            <div class="weather-icon">
+                💧
+            </div>
+
+            <h2 id="humidity">
+                --%
+            </h2>
+
+            <p>
+                Humidity
+            </p>
+
+        </div>
+
+
+        <div class="weather-card">
+
+            <div class="weather-icon">
+                🌧️
+            </div>
+
+            <h2 id="rainfall">
+                -- mm
+            </h2>
+
+            <p>
+                Precipitation
+            </p>
+
+        </div>
+
+
+        <div class="weather-card">
+
+            <div class="weather-icon">
+                💨
+            </div>
+
+            <h2 id="wind">
+                -- km/h
+            </h2>
+
+            <p>
+                Wind Speed
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- WEATHER ALERTS -->
+
+    <div class="weather-box">
+
+        <h2>
+            🚨 Weather Alerts
+        </h2>
+
+        <div id="weatherAlerts">
+
+            <div class="alert">
+
+                <strong>
+                    ⏳ Checking Weather...
+                </strong>
+
+                <p>
+                    Please wait while live weather data is loading.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SETTINGS -->
+
+    <div class="weather-box">
+
+        <h2>
+            ⚙️ Smart Weather Alert Settings
+        </h2>
+
+        <form
+            class="settings-form"
+            onsubmit="saveWeatherSettings(event)"
+        >
+
+            <div class="setting-group">
+
+                <label>
+                    📍 Location
+                </label>
+
+                <select id="weatherLocation">
+
+                    <option>Kopargaon</option>
+
+                    <option>Shirdi</option>
+
+                    <option>Nashik</option>
+
+                    <option>Pune</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="setting-group">
+
+                <label>
+                    🌡️ Temperature Threshold (°C)
+                </label>
+
+                <input
+                    type="number"
+                    id="tempThreshold"
+                    value="35"
+                >
+
+            </div>
+
+
+            <div class="setting-group">
+
+                <label>
+                    💧 Soil Moisture Threshold (%)
+                </label>
+
+                <input
+                    type="number"
+                    id="moistureThreshold"
+                    value="40"
+                    min="0"
+                    max="100"
+                >
+
+            </div>
+
+
+            <div class="setting-group">
+
+                <label>
+                    🔔 Notification Type
+                </label>
+
+                <select id="notificationType">
+
+                    <option>
+                        In-App Alert
+                    </option>
+
+                    <option>
+                        Push Notification
+                    </option>
+
+                    <option>
+                        SMS
+                    </option>
+
+                    <option>
+                        Email
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-button"
+            >
+                💾 Save Alert Settings
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- API INFO -->
+
+    <div class="weather-box">
+
+        <h2>
+            🌐 Live Weather Information
+        </h2>
+
+        <div class="api-info">
+
+            <p>
+                ✅ <strong>Live Weather API Connected</strong>
+            </p>
+
+            <br>
+
+            <p>
+                🌡️ Temperature, 💧 humidity,
+                🌧️ precipitation and 💨 wind speed
+                are updated automatically.
+            </p>
+
+            <br>
+
+            <p>
+                🔄 Weather data refreshes every 10 minutes.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        🌱 © 2026 SmartCrop. All Rights Reserved.
+    </p>
+
+    <p>
+        Smart Farming • Better Decisions • Better Future 🌾
+    </p>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+
+/* LOCATION COORDINATES */
+
+const locations = {
+
+    Kopargaon: {
+        latitude: 19.8825,
+        longitude: 74.4760
+    },
+
+    Shirdi: {
+        latitude: 19.7667,
+        longitude: 74.4778
+    },
+
+    Nashik: {
+        latitude: 19.9975,
+        longitude: 73.7898
+    },
+
+    Pune: {
+        latitude: 18.5204,
+        longitude: 73.8567
+    }
+
+};
+
+
+/* FETCH WEATHER */
+
+async function fetchWeather(
+    latitude,
+    longitude,
+    locationName
+) {
+
+    const status =
+        document.getElementById("status");
+
+
+    status.className =
+        "weather-status loading";
+
+
+    status.innerHTML =
+        "🔄 Loading live weather for " +
+        locationName +
+        "...";
+
+
+    try {
+
+        const url =
+            "https://api.open-meteo.com/v1/forecast" +
+            "?latitude=" + latitude +
+            "&longitude=" + longitude +
+            "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code" +
+            "&timezone=auto";
+
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Weather API failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const current =
+            data.current;
+
+
+        document.getElementById("temperature")
+            .innerText =
+            Math.round(
+                current.temperature_2m
+            ) + "°C";
+
+
+        document.getElementById("humidity")
+            .innerText =
+            current.relative_humidity_2m +
+            "%";
+
+
+        document.getElementById("rainfall")
+            .innerText =
+            current.precipitation +
+            " mm";
+
+
+        document.getElementById("wind")
+            .innerText =
+            Math.round(
+                current.wind_speed_10m
+            ) + " km/h";
+
+
+        status.className =
+            "weather-status";
+
+
+        status.innerHTML =
+            "🟢 Live weather loaded for " +
+            locationName +
+            " | ⏰ Updated: " +
+            new Date().toLocaleTimeString();
+
+
+        createAlerts(current);
+
+    }
+
+
+    catch (error) {
+
+        console.error(error);
+
+
+        status.className =
+            "weather-status error";
+
+
+        status.innerHTML =
+            "❌ Unable to load weather. Check your internet connection.";
+
+    }
+
+}
+
+
+/* SELECT LOCATION */
+
+function getWeather() {
+
+    const location =
+        document.getElementById(
+            "location"
+        ).value;
+
+
+    const coordinates =
+        locations[location];
+
+
+    fetchWeather(
+        coordinates.latitude,
+        coordinates.longitude,
+        location
+    );
+
+}
+
+
+function changeLocation() {
+
+    getWeather();
+
+}
+
+
+/* MY LOCATION */
+
+function getMyLocation() {
+
+    if (!navigator.geolocation) {
+
+        alert(
+            "❌ Your browser does not support location."
+        );
+
+        return;
+
+    }
+
+
+    const status =
+        document.getElementById("status");
+
+
+    status.className =
+        "weather-status loading";
+
+
+    status.innerHTML =
+        "📍 Getting your current location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+
+            const longitude =
+                position.coords.longitude;
+
+
+            fetchWeather(
+                latitude,
+                longitude,
+                "your current location"
+            );
+
+        },
+
+
+        function(error) {
+
+            console.error(error);
+
+
+            status.className =
+                "weather-status error";
+
+
+            status.innerHTML =
+                "❌ Please allow location permission in your browser.";
+
+        }
+
+    );
+
+}
+
+
+/* WEATHER ALERTS */
+
+function createAlerts(weather) {
+
+    const alerts =
+        document.getElementById(
+            "weatherAlerts"
+        );
+
+
+    alerts.innerHTML = "";
+
+
+    let alertCount = 0;
+
+
+    if (
+        weather.temperature_2m >= 35
+    ) {
+
+        alerts.innerHTML += `
+
+            <div class="alert">
+
+                <strong>
+                    🌡️ High Temperature Alert
+                </strong>
+
+                <p>
+                    Current temperature is
+                    ${Math.round(weather.temperature_2m)}°C.
+                    Consider irrigation and crop protection.
+                </p>
+
+            </div>
+
+        `;
+
+        alertCount++;
+
+    }
+
+
+    if (
+        weather.precipitation > 0
+    ) {
+
+        alerts.innerHTML += `
+
+            <div class="alert">
+
+                <strong>
+                    🌧️ Rain Alert
+                </strong>
+
+                <p>
+                    Current precipitation is
+                    ${weather.precipitation} mm.
+                    Plan irrigation accordingly.
+                </p>
+
+            </div>
+
+        `;
+
+        alertCount++;
+
+    }
+
+
+    if (
+        weather.wind_speed_10m >= 30
+    ) {
+
+        alerts.innerHTML += `
+
+            <div class="alert">
+
+                <strong>
+                    💨 Strong Wind Alert
+                </strong>
+
+                <p>
+                    Wind speed is
+                    ${Math.round(weather.wind_speed_10m)}
+                    km/h.
+                    Take precautions for crops.
+                </p>
+
+            </div>
+
+        `;
+
+        alertCount++;
+
+    }
+
+
+    if (
+        weather.relative_humidity_2m >= 85
+    ) {
+
+        alerts.innerHTML += `
+
+            <div class="alert">
+
+                <strong>
+                    💧 High Humidity Alert
+                </strong>
+
+                <p>
+                    Humidity is
+                    ${weather.relative_humidity_2m}%.
+                    Monitor crops for fungal diseases.
+                </p>
+
+            </div>
+
+        `;
+
+        alertCount++;
+
+    }
+
+
+    if (
+        alertCount === 0
+    ) {
+
+        alerts.innerHTML = `
+
+            <div class="alert">
+
+                <strong>
+                    ✅ Weather Conditions Normal
+                </strong>
+
+                <p>
+                    No major weather alerts at the moment.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* SAVE SETTINGS */
+
+function saveWeatherSettings(event) {
+
+    event.preventDefault();
+
+
+    const location =
+        document.getElementById(
+            "weatherLocation"
+        ).value;
+
+
+    const temperature =
+        document.getElementById(
+            "tempThreshold"
+        ).value;
+
+
+    const moisture =
+        document.getElementById(
+            "moistureThreshold"
+        ).value;
+
+
+    const notification =
+        document.getElementById(
+            "notificationType"
+        ).value;
+
+
+    alert(
+
+        "✅ Weather Settings Saved!\n\n" +
+
+        "📍 Location: " +
+        location +
+
+        "\n🌡️ Temperature: " +
+        temperature +
+        "°C" +
+
+        "\n💧 Soil Moisture: " +
+        moisture +
+        "%" +
+
+        "\n🔔 Notification: " +
+        notification
+
+    );
+
+}
+
+
+/* LOAD WEATHER */
+
+getWeather();
+
+
+/* AUTO REFRESH */
+
+setInterval(
+    getWeather,
+    10 * 60 * 1000
+);
+
+</script>
+
+
+<script src="../js/script.js"></script>
+
+</body>
+
+</html>

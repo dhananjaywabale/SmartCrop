@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crop Advisory - SmartCrop</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f9f4;
+            color: #333;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 18px 6%;
+
+            background: #176b22;
+            color: white;
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #c8e6c9;
+        }
+
+        /* ================= HEADER ================= */
+
+        .advisory-header {
+            padding: 60px 6%;
+
+            background: linear-gradient(
+                135deg,
+                #e9f8e9,
+                #cdeccd
+            );
+
+            animation: fadeIn 0.8s ease;
+        }
+
+        .advisory-header h1 {
+            margin: 0 0 12px;
+
+            color: #176b22;
+
+            font-size: 38px;
+        }
+
+        .advisory-header p {
+            margin: 0;
+
+            color: #444;
+
+            font-size: 18px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .advisory-container {
+            width: 88%;
+            max-width: 1150px;
+
+            margin: 45px auto;
+        }
+
+        /* ================= BOX ================= */
+
+        .advisory-box {
+            background: white;
+
+            padding: 32px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 6px 20px rgba(0,0,0,0.08);
+
+            margin-bottom: 28px;
+
+            animation: slideUp 0.7s ease;
+        }
+
+        .advisory-box h2 {
+            color: #237b2c;
+
+            margin-top: 0;
+            margin-bottom: 22px;
+        }
+
+        /* ================= FORM ================= */
+
+        .advisory-form {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            transition: 0.3s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+
+            border-color: #2e7d32;
+
+            box-shadow:
+                0 0 0 3px rgba(46,125,50,0.12);
+        }
+
+        /* ================= BUTTON ================= */
+
+        .advisory-button {
+
+            grid-column: 1 / -1;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2e7d32;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .advisory-button:hover {
+
+            background: #1b5e20;
+
+            transform: translateY(-2px);
+        }
+
+        /* ================= RECOMMENDATION ================= */
+
+        .recommendation {
+
+            display: none;
+
+            margin-top: 30px;
+
+            padding: 25px;
+
+            background: #f1f8e9;
+
+            border-left:
+                6px solid #2e7d32;
+
+            border-radius: 10px;
+
+            animation: fadeIn 0.6s ease;
+        }
+
+        .recommendation h3 {
+
+            color: #1b5e20;
+
+            margin-top: 0;
+
+            margin-bottom: 12px;
+        }
+
+        .crop-result {
+
+            font-size: 20px;
+
+            color: #237b2c;
+
+            margin-bottom: 20px;
+        }
+
+        /* ================= TIPS ================= */
+
+        .tip-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+
+            margin-top: 15px;
+        }
+
+        .tip-card {
+
+            background: white;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.06);
+
+            border-left:
+                4px solid #66bb6a;
+        }
+
+        .tip-card h4 {
+
+            margin-top: 0;
+
+            color: #2e7d32;
+        }
+
+        .tip-card p {
+
+            margin-bottom: 0;
+
+            color: #555;
+
+            line-height: 1.5;
+        }
+
+        /* ================= INFO ================= */
+
+        .info-list {
+
+            padding-left: 20px;
+        }
+
+        .info-list li {
+
+            margin-bottom: 12px;
+
+            line-height: 1.6;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+
+            background: #176b22;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 28px;
+
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 6px;
+        }
+
+        /* ================= ANIMATIONS ================= */
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+
+        }
+
+        @keyframes slideUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 850px) {
+
+            .advisory-form {
+                grid-template-columns: 1fr;
+            }
+
+            .advisory-button {
+                grid-column: auto;
+            }
+
+            .tip-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .advisory-container {
+                width: 92%;
+            }
+
+            .advisory-header h1 {
+                font-size: 29px;
+            }
+
+            .advisory-header p {
+                font-size: 16px;
+            }
+
+            .advisory-box {
+                padding: 23px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .nav-links a {
+                font-size: 14px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVIGATION ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌱 SmartCrop
+    </div>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="dashboard.html">Dashboard</a>
+
+        <a href="crop-advisory.html">
+            Crop Advisory
+        </a>
+
+        <a href="crop-health.html">
+            Crop Health
+        </a>
+
+        <a href="marketplace.html">
+            Marketplace
+        </a>
+
+        <a href="weather.html">
+            Weather
+        </a>
+
+        <a href="profile.html">
+            Profile
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HEADER ================= -->
+
+<section class="advisory-header">
+
+    <h1>
+        🌾 Crop Advisory
+    </h1>
+
+    <p>
+        Get suitable crop recommendations based on
+        soil, temperature and moisture conditions.
+    </p>
+
+</section>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="advisory-container">
+
+
+    <!-- ================= FORM ================= -->
+
+    <div class="advisory-box">
+
+        <h2>
+            🌱 Enter Farm Details
+        </h2>
+
+
+        <form
+            class="advisory-form"
+            onsubmit="getRecommendation(event)"
+        >
+
+
+            <!-- SOIL -->
+
+            <div class="form-group">
+
+                <label for="soilType">
+                    Soil Type
+                </label>
+
+                <select id="soilType" required>
+
+                    <option value="">
+                        Select Soil Type
+                    </option>
+
+                    <option value="black">
+                        Black Soil
+                    </option>
+
+                    <option value="red">
+                        Red Soil
+                    </option>
+
+                    <option value="alluvial">
+                        Alluvial Soil
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TEMPERATURE -->
+
+            <div class="form-group">
+
+                <label for="temperature">
+                    Temperature (°C)
+                </label>
+
+                <input
+                    type="number"
+                    id="temperature"
+                    min="-10"
+                    max="60"
+                    placeholder="Example: 28"
+                    required
+                >
+
+            </div>
+
+
+            <!-- MOISTURE -->
+
+            <div class="form-group">
+
+                <label for="moisture">
+                    Soil Moisture (%)
+                </label>
+
+                <input
+                    type="number"
+                    id="moisture"
+                    min="0"
+                    max="100"
+                    placeholder="Example: 68"
+                    required
+                >
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <button
+                type="submit"
+                class="advisory-button"
+            >
+
+                🌾 Get Crop Recommendation
+
+            </button>
+
+
+        </form>
+
+
+        <!-- ================= RECOMMENDATION ================= -->
+
+        <div
+            id="recommendation"
+            class="recommendation"
+        >
+
+            <h3>
+                🌱 Recommended Crop
+            </h3>
+
+            <p
+                id="cropResult"
+                class="crop-result"
+            ></p>
+
+
+            <h3>
+                📋 Farming Recommendations
+            </h3>
+
+
+            <div class="tip-grid">
+
+
+                <div class="tip-card">
+
+                    <h4>
+                        💧 Irrigation
+                    </h4>
+
+                    <p id="irrigationTip">
+                    </p>
+
+                </div>
+
+
+                <div class="tip-card">
+
+                    <h4>
+                        🌿 Fertilizer
+                    </h4>
+
+                    <p id="fertilizerTip">
+                    </p>
+
+                </div>
+
+
+                <div class="tip-card">
+
+                    <h4>
+                        🐛 Pest Control
+                    </h4>
+
+                    <p id="pestTip">
+                    </p>
+
+                </div>
+
+
+                <div class="tip-card">
+
+                    <h4>
+                        🌦️ Weather
+                    </h4>
+
+                    <p id="weatherTip">
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= INFORMATION ================= -->
+
+    <div class="advisory-box">
+
+        <h2>
+            🌾 Why Use Crop Advisory?
+        </h2>
+
+        <p>
+            SmartCrop helps farmers select suitable crops
+            using basic soil and environmental conditions.
+        </p>
+
+
+        <ul class="info-list">
+
+            <li>
+                🌱 Soil type is considered for crop selection.
+            </li>
+
+            <li>
+                🌡️ Temperature is used to identify suitable
+                growing conditions.
+            </li>
+
+            <li>
+                💧 Soil moisture helps determine irrigation needs.
+            </li>
+
+            <li>
+                🐛 Basic pest and disease prevention tips
+                are provided.
+            </li>
+
+            <li>
+                🌦️ Weather conditions should always be checked
+                before irrigation and spraying.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        © 2026 SmartCrop. All Rights Reserved.
+    </p>
+
+    <p>
+        Smart Crop Advisory & Marketplace Platform
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+function getRecommendation(event) {
+
+    event.preventDefault();
+
+
+    const soil =
+        document.getElementById("soilType").value;
+
+    const temperature =
+        Number(
+            document.getElementById("temperature").value
+        );
+
+    const moisture =
+        Number(
+            document.getElementById("moisture").value
+        );
+
+
+    let crop = "";
+    let irrigation = "";
+    let fertilizer = "";
+    let pest = "";
+    let weather = "";
+
+
+    /* ================= BLACK SOIL ================= */
+
+    if (soil === "black") {
+
+        if (temperature >= 22 &&
+            temperature <= 35 &&
+            moisture >= 40 &&
+            moisture <= 75) {
+
+            crop = "Cotton 🌿";
+
+            irrigation =
+                "Provide irrigation when soil moisture becomes low. Avoid waterlogging.";
+
+            fertilizer =
+                "Use balanced NPK fertilizer and follow soil-test recommendations.";
+
+            pest =
+                "Monitor regularly for bollworm and sucking pests.";
+
+            weather =
+                "Avoid unnecessary irrigation before heavy rainfall.";
+
+        }
+
+        else if (temperature >= 20 &&
+                 temperature <= 32) {
+
+            crop = "Soybean 🌱";
+
+            irrigation =
+                "Maintain moderate soil moisture, especially during flowering.";
+
+            fertilizer =
+                "Use recommended phosphorus and potassium based on soil testing.";
+
+            pest =
+                "Monitor for caterpillars and leaf-eating insects.";
+
+            weather =
+                "Ensure good drainage during heavy rainfall.";
+
+        }
+
+        else {
+
+            crop = "Jowar 🌾";
+
+            irrigation =
+                "Use moderate irrigation and avoid excess water.";
+
+            fertilizer =
+                "Apply nitrogen and other nutrients according to soil condition.";
+
+            pest =
+                "Monitor for shoot fly and stem borer.";
+
+            weather =
+                "Avoid irrigation during heavy rainfall.";
+
+        }
+
+    }
+
+
+    /* ================= RED SOIL ================= */
+
+    else if (soil === "red") {
+
+        if (temperature >= 22 &&
+            temperature <= 34 &&
+            moisture >= 35 &&
+            moisture <= 70) {
+
+            crop = "Groundnut 🥜";
+
+            irrigation =
+                "Maintain adequate moisture during flowering and pod development.";
+
+            fertilizer =
+                "Use phosphorus, potassium and calcium as recommended.";
+
+            pest =
+                "Monitor for leaf miner and sucking pests.";
+
+            weather =
+                "Avoid excessive irrigation during rainy periods.";
+
+        }
+
+        else {
+
+            crop = "Millet 🌾";
+
+            irrigation =
+                "Millets generally require less water than many other crops.";
+
+            fertilizer =
+                "Use organic manure and balanced fertilizer.";
+
+            pest =
+                "Monitor regularly for common crop pests.";
+
+            weather =
+                "Suitable for relatively dry conditions.";
+
+        }
+
+    }
+
+
+    /* ================= ALLUVIAL SOIL ================= */
+
+    else if (soil === "alluvial") {
+
+        if (moisture >= 60) {
+
+            crop = "Rice 🌾";
+
+            irrigation =
+                "Maintain adequate water availability and proper field drainage.";
+
+            fertilizer =
+                "Apply nitrogen, phosphorus and potassium according to soil testing.";
+
+            pest =
+                "Monitor for stem borer and leaf folder.";
+
+            weather =
+                "Heavy rainfall can cause waterlogging, so maintain drainage.";
+
+        }
+
+        else {
+
+            crop = "Wheat 🌾";
+
+            irrigation =
+                "Provide irrigation at important growth stages.";
+
+            fertilizer =
+                "Use balanced NPK and nitrogen according to soil-test recommendations.";
+
+            pest =
+                "Monitor for aphids and rust symptoms.";
+
+            weather =
+                "Cool and moderately dry conditions are generally favorable.";
+
+        }
+
+    }
+
+
+    /* ================= OTHER SOIL ================= */
+
+    else {
+
+        if (temperature >= 20 &&
+            temperature <= 32 &&
+            moisture >= 40 &&
+            moisture <= 70) {
+
+            crop = "Vegetables 🥕";
+
+            irrigation =
+                "Maintain regular but controlled irrigation.";
+
+            fertilizer =
+                "Use well-decomposed organic manure and balanced fertilizer.";
+
+            pest =
+                "Inspect leaves regularly for insects and disease symptoms.";
+
+            weather =
+                "Avoid irrigation immediately before heavy rainfall.";
+
+        }
+
+        else {
+
+            crop = "Bajra 🌾";
+
+            irrigation =
+                "Use limited irrigation according to soil moisture.";
+
+            fertilizer =
+                "Apply organic manure and balanced fertilizer.";
+
+            pest =
+                "Monitor plants regularly for pest attacks.";
+
+            weather =
+                "Suitable for comparatively warm and dry conditions.";
+
+        }
+
+    }
+
+
+    /* ================= DISPLAY ================= */
+
+    document.getElementById("cropResult").innerHTML =
+        "Based on your farm conditions, the recommended crop is <strong>"
+        + crop +
+        "</strong>.";
+
+
+    document.getElementById("irrigationTip").textContent =
+        irrigation;
+
+
+    document.getElementById("fertilizerTip").textContent =
+        fertilizer;
+
+
+    document.getElementById("pestTip").textContent =
+        pest;
+
+
+    document.getElementById("weatherTip").textContent =
+        weather;
+
+
+    document.getElementById("recommendation").style.display =
+        "block";
+
+
+    /* Scroll to result */
+
+    document.getElementById("recommendation")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+}
+
+</script>
+
+
+<script src="../js/script.js"></script>
+
+</body>
+
+</html>

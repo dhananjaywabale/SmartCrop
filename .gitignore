@@ -1,0 +1,19 @@
+# Database credentials
+PHP/db.php
+php/db.php
+
+# Environment files
+.env
+
+# Temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# Local backups
+*.zip
+
+**/PHP/db.php
+**/php/db.php
+**/config.php
+.env

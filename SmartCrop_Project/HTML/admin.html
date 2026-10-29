@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - SmartCrop</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .admin-section {
+            padding: 50px 20px;
+            background: #f5f7f5;
+            min-height: 80vh;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .admin-header h1 {
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .admin-header p {
+            color: #666;
+        }
+
+        .admin-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .admin-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .admin-card .icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .admin-card h2 {
+            color: #2e7d32;
+            margin: 5px 0;
+        }
+
+        .admin-card p {
+            color: #666;
+        }
+
+        .admin-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .admin-panel h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .admin-table th {
+            background: #f1f8f1;
+            color: #333;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .active-status {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .pending-status {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-btn {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            background: #2e7d32;
+            color: white;
+        }
+
+        .admin-btn:hover {
+            opacity: 0.9;
+        }
+
+        .danger-btn {
+            background: #c62828;
+        }
+
+        .info-box {
+            background: #f1f8f1;
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 900px) {
+            .admin-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .admin-table {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .admin-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-panel {
+                overflow-x: auto;
+            }
+
+            .admin-table {
+                min-width: 600px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+
+        <div class="logo">
+            🌱 SmartCrop
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="marketplace.html">Marketplace</a>
+            <a href="weather.html">Weather</a>
+            <a href="login.html" class="login-btn">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Admin Dashboard -->
+    <section class="admin-section">
+
+        <div class="admin-container">
+
+            <!-- Header -->
+            <div class="admin-header">
+
+                <h1>🛠️ Admin Dashboard</h1>
+
+                <p>
+                    Manage SmartCrop users, marketplace and system activities
+                </p>
+
+            </div>
+
+
+            <!-- Statistics -->
+            <div class="admin-cards">
+
+                <div class="admin-card">
+
+                    <div class="icon">👥</div>
+
+                    <h2 id="totalUsers">128</h2>
+
+                    <p>Total Users</p>
+
+                </div>
+
+
+                <div class="admin-card">
+
+                    <div class="icon">🌾</div>
+
+                    <h2 id="totalCrops">76</h2>
+
+                    <p>Crop Listings</p>
+
+                </div>
+
+
+                <div class="admin-card">
+
+                    <div class="icon">🛒</div>
+
+                    <h2 id="transactions">54</h2>
+
+                    <p>Transactions</p>
+
+                </div>
+
+
+                <div class="admin-card">
+
+                    <div class="icon">⚠️</div>
+
+                    <h2 id="alerts">12</h2>
+
+                    <p>Active Alerts</p>
+
+                </div>
+
+            </div>
+
+
+            <!-- User Management -->
+            <div class="admin-panel">
+
+                <h2>👥 User Management</h2>
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>User</th>
+                            <th>Role</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>Shubham Sonavane</td>
+
+                            <td>Farmer</td>
+
+                            <td>Kopargaon</td>
+
+                            <td>
+                                <span class="status active-status">
+                                    Active
+                                </span>
+                            </td>
+
+                            <td>
+                                <button
+                                    class="admin-btn"
+                                    onclick="manageUser('Shubham Sonavane')">
+                                    Manage
+                                </button>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>Pratik Pagar</td>
+
+                            <td>Buyer</td>
+
+                            <td>Shirdi</td>
+
+                            <td>
+                                <span class="status active-status">
+                                    Active
+                                </span>
+                            </td>
+
+                            <td>
+                                <button
+                                    class="admin-btn"
+                                    onclick="manageUser('Pratik Pagar')">
+                                    Manage
+                                </button>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>Krushna Burbane</td>
+
+                            <td>Farmer</td>
+
+                            <td>Nashik</td>
+
+                            <td>
+                                <span class="status pending-status">
+                                    Pending
+                                </span>
+                            </td>
+
+                            <td>
+                                <button
+                                    class="admin-btn"
+                                    onclick="manageUser('Krushna Burbane')">
+                                    Manage
+                                </button>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- Marketplace Management -->
+            <div class="admin-panel">
+
+                <h2>🛒 Marketplace Management</h2>
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Product</th>
+                            <th>Seller</th>
+                            <th>Price</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>Wheat</td>
+
+                            <td>Shubham Sonavane</td>
+
+                            <td>₹2,400 / Quintal</td>
+
+                            <td>Kopargaon</td>
+
+                            <td>
+                                <span class="status active-status">
+                                    Approved
+                                </span>
+                            </td>
+
+                            <td>
+                                <button
+                                    class="admin-btn"
+                                    onclick="viewListing('Wheat')">
+                                    View
+                                </button>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>Onion</td>
+
+                            <td>Krushna Burbane</td>
+
+                            <td>₹2,200 / Quintal</td>
+
+                            <td>Ahmednagar</td>
+
+                            <td>
+                                <span class="status pending-status">
+                                    Pending
+                                </span>
+                            </td>
+
+                            <td>
+                                <button
+                                    class="admin-btn"
+                                    onclick="approveListing('Onion')">
+                                    Approve
+                                </button>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>Potato</td>
+
+                            <td>Pratik Pagar</td>
+
+                            <td>₹1,800 / Quintal</td>
+
+                            <td>Shirdi</td>
+
+                            <td>
+                                <span class="status active-status">
+                                    Approved
+                                </span>
+                            </td>
+
+                            <td>
+                                <button
+                                    class="admin-btn"
+                                    onclick="viewListing('Potato')">
+                                    View
+                                </button>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- Crop Advisory Overview -->
+            <div class="admin-panel">
+
+                <h2>🌾 Crop Advisory Overview</h2>
+
+                <div class="info-box">
+
+                    <p>
+                        <strong>Most Recommended Crop:</strong>
+                        Wheat
+                    </p>
+
+                    <p>
+                        <strong>Active Crop Health Monitoring:</strong>
+                        42 Farms
+                    </p>
+
+                    <p>
+                        <strong>Weather Alerts Generated:</strong>
+                        18
+                    </p>
+
+                    <p>
+                        <strong>High Risk Farms:</strong>
+                        5
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick Actions -->
+            <div class="admin-panel">
+
+                <h2>⚡ Quick Actions</h2>
+
+                <div class="action-buttons">
+
+                    <button
+                        class="admin-btn"
+                        onclick="addUser()">
+                        ➕ Add User
+                    </button>
+
+                    <button
+                        class="admin-btn"
+                        onclick="manageMarketplace()">
+                        🛒 Manage Marketplace
+                    </button>
+
+                    <button
+                        class="admin-btn"
+                        onclick="generateReport()">
+                        📊 Generate Report
+                    </button>
+
+                    <button
+                        class="admin-btn"
+                        onclick="systemSettings()">
+                        ⚙️ System Settings
+                    </button>
+
+                    <button
+                        class="admin-btn danger-btn"
+                        onclick="securityCheck()">
+                        🔐 Security Check
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Admin Information -->
+            <div class="admin-panel">
+
+                <h2>🔐 Admin Controls</h2>
+
+                <div class="info-box">
+
+                    <p>
+                        <strong>Admin Role:</strong>
+                        System Administrator
+                    </p>
+
+                    <p>
+                        <strong>Access Level:</strong>
+                        Full Access
+                    </p>
+
+                    <p>
+                        <strong>System Status:</strong>
+                        ✅ Operational
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Back -->
+            <div style="text-align:center; margin-top:25px;">
+
+                <a
+                    href="dashboard.html"
+                    class="back-home">
+                    ← Back to Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © <span class="current-year"></span> SmartCrop.
+            All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- Main JavaScript -->
+    <script src="../js/script.js"></script>
+
+
+    <!-- Admin JavaScript -->
+    <script>
+
+        function manageUser(user) {
+
+            alert(
+                "User Management\n\n" +
+                "Selected User: " + user +
+                "\n\nPHP + MySQL backend will provide complete user management."
+            );
+
+        }
+
+
+        function viewListing(product) {
+
+            alert(
+                "Marketplace Listing\n\n" +
+                "Product: " + product +
+                "\n\nListing details will be loaded from MySQL database."
+            );
+
+        }
+
+
+        function approveListing(product) {
+
+            alert(
+                product +
+                " listing has been approved successfully!"
+            );
+
+        }
+
+
+        function addUser() {
+
+            alert(
+                "Add User\n\n" +
+                "Admin can add new users using the PHP + MySQL backend."
+            );
+
+        }
+
+
+        function manageMarketplace() {
+
+            alert(
+                "Marketplace Management\n\n" +
+                "Admin can manage product listings, sellers and transactions."
+            );
+
+        }
+
+
+        function generateReport() {
+
+            alert(
+                "Report Generated!\n\n" +
+                "Detailed reports will be connected to the database later."
+            );
+
+        }
+
+
+        function systemSettings() {
+
+            alert(
+                "System Settings\n\n" +
+                "System configuration options will be available here."
+            );
+
+        }
+
+
+        function securityCheck() {
+
+            alert(
+                "Security Check\n\n" +
+                "Security monitoring and admin authentication will be handled by PHP."
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>

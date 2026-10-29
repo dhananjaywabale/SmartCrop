@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Help & Support - SmartCrop</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+
+        <div class="logo">
+            🌱 SmartCrop
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="crop-advisory.html">Crop Advisory</a>
+            <a href="marketplace.html">Marketplace</a>
+            <a href="weather.html">Weather</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="login.html" class="login-btn">Login</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Help Header -->
+    <section class="login-section">
+
+        <div class="login-box">
+
+            <h1>❓ Help & Support</h1>
+
+            <p>
+                Get help and learn how to use SmartCrop
+            </p>
+
+
+            <!-- FAQ -->
+            <h2>📌 Frequently Asked Questions</h2>
+
+            <details>
+                <summary>What is SmartCrop?</summary>
+
+                <p>
+                    SmartCrop is a smart farming platform that helps
+                    farmers with crop advisory, crop health monitoring,
+                    weather alerts and digital marketplace services.
+                </p>
+
+            </details>
+
+
+            <details>
+                <summary>How can I get crop advice?</summary>
+
+                <p>
+                    Open the Crop Advisory page and enter soil type,
+                    temperature and soil moisture. SmartCrop will provide
+                    a suitable crop recommendation.
+                </p>
+
+            </details>
+
+
+            <details>
+                <summary>How can I buy or sell crops?</summary>
+
+                <p>
+                    Open the Marketplace page to search available
+                    agricultural products. Sellers can add their
+                    products and buyers can view product details.
+                </p>
+
+            </details>
+
+
+            <details>
+                <summary>How can I check weather information?</summary>
+
+                <p>
+                    Open the Weather page and select your location.
+                    You can view temperature, humidity, rainfall and
+                    wind information.
+                </p>
+
+            </details>
+
+
+            <details>
+                <summary>Can I receive weather alerts?</summary>
+
+                <p>
+                    Yes. You can configure temperature and soil moisture
+                    thresholds from the Weather and Settings pages.
+                </p>
+
+            </details>
+
+
+            <!-- Tutorials -->
+            <h2 style="margin-top: 30px;">
+                📚 Tutorials & Guides
+            </h2>
+
+            <div style="margin-top: 15px;">
+
+                <div style="
+                    padding: 15px;
+                    background: #f5f5f5;
+                    border-radius: 8px;
+                    margin-bottom: 12px;
+                ">
+
+                    <h3>🌾 Crop Advisory Guide</h3>
+
+                    <p>
+                        Learn how to enter soil and weather information
+                        and get crop recommendations.
+                    </p>
+
+                    <button
+                        class="btn"
+                        onclick="showGuide('Crop Advisory')">
+                        View Guide
+                    </button>
+
+                </div>
+
+
+                <div style="
+                    padding: 15px;
+                    background: #f5f5f5;
+                    border-radius: 8px;
+                    margin-bottom: 12px;
+                ">
+
+                    <h3>🛒 Marketplace Guide</h3>
+
+                    <p>
+                        Learn how to search agricultural products,
+                        compare prices and view seller information.
+                    </p>
+
+                    <button
+                        class="btn"
+                        onclick="showGuide('Marketplace')">
+                        View Guide
+                    </button>
+
+                </div>
+
+
+                <div style="
+                    padding: 15px;
+                    background: #f5f5f5;
+                    border-radius: 8px;
+                    margin-bottom: 12px;
+                ">
+
+                    <h3>🌦️ Weather Guide</h3>
+
+                    <p>
+                        Learn how to check weather conditions and
+                        configure weather alerts.
+                    </p>
+
+                    <button
+                        class="btn"
+                        onclick="showGuide('Weather')">
+                        View Guide
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Contact Support -->
+            <h2 style="margin-top: 30px;">
+                📩 Contact Support
+            </h2>
+
+            <form onsubmit="submitSupport(event)">
+
+                <label>
+                    Your Name
+                </label>
+
+                <input
+                    type="text"
+                    id="supportName"
+                    placeholder="Enter your name"
+                    required
+                >
+
+
+                <label>
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="supportEmail"
+                    placeholder="Enter your email"
+                    required
+                >
+
+
+                <label>
+                    Issue / Message
+                </label>
+
+                <textarea
+                    id="supportMessage"
+                    placeholder="Describe your problem"
+                    rows="5"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid #ccc;
+                        border-radius: 6px;
+                        font-size: 15px;
+                        resize: vertical;
+                    "
+                ></textarea>
+
+
+                <button
+                    type="submit"
+                    class="btn login-submit">
+                    Submit Support Request
+                </button>
+
+            </form>
+
+
+            <!-- Support Options -->
+            <h2 style="margin-top: 30px;">
+                💬 Other Support Options
+            </h2>
+
+            <p>
+                📧 Email:
+                support@smartcrop.com
+            </p>
+
+            <p>
+                📞 Phone:
+                +91 1800 123 4567
+            </p>
+
+            <p>
+                💬 Live Chat:
+                Available 9:00 AM – 6:00 PM
+            </p>
+
+
+            <!-- Back -->
+            <a href="dashboard.html" class="back-home">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © <span class="current-year"></span> SmartCrop.
+            All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="../js/script.js"></script>
+
+    <script>
+
+        function showGuide(topic) {
+
+            alert(
+                topic +
+                " Guide\n\n" +
+                "This tutorial will help you understand how to use the " +
+                topic +
+                " feature of SmartCrop."
+            );
+
+        }
+
+
+        function submitSupport(event) {
+
+            event.preventDefault();
+
+            const name =
+                document.getElementById("supportName").value;
+
+            alert(
+                "Thank you " +
+                name +
+                "!\n\n" +
+                "Your support request has been submitted successfully."
+            );
+
+            document.getElementById("supportName").value = "";
+            document.getElementById("supportEmail").value = "";
+            document.getElementById("supportMessage").value = "";
+
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Drone Monitoring - Smart Crop</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f3;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1b5e20, #43a047);
+            color: white;
+            padding: 22px 6%;
+        }
+
+        .header h1 {
+            font-size: 26px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .title {
+            margin-bottom: 25px;
+        }
+
+        .title h2 {
+            color: #1b5e20;
+            margin-bottom: 8px;
+            font-size: 30px;
+        }
+
+        .title p {
+            color: #666;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            color: #2e7d32;
+            margin-bottom: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2e7d32;
+        }
+
+        .upload-box {
+            border: 2px dashed #4caf50;
+            padding: 35px 20px;
+            text-align: center;
+            border-radius: 14px;
+            background: #f8fff8;
+            cursor: pointer;
+        }
+
+        .upload-box h3 {
+            margin-bottom: 8px;
+        }
+
+        .upload-box p {
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .upload-box input {
+            border: none;
+            background: transparent;
+        }
+
+        .image-preview {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 13px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .btn:hover {
+            background: #1b5e20;
+        }
+
+        .secondary-btn {
+            background: #607d8b;
+        }
+
+        .secondary-btn:hover {
+            background: #455a64;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .result-box {
+            padding: 18px;
+            border-radius: 12px;
+            background: #f7f9f7;
+            border-left: 5px solid #4caf50;
+        }
+
+        .result-box h4 {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .result-box p {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            margin-top: 20px;
+            padding: 18px;
+            background: #fff8e1;
+            border-left: 5px solid #ffb300;
+            border-radius: 10px;
+        }
+
+        .recommendation h4 {
+            margin-bottom: 8px;
+            color: #8d6e00;
+        }
+
+        .demo-note {
+            margin-top: 15px;
+            padding: 12px;
+            background: #e3f2fd;
+            color: #1565c0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .drone-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .drone-info img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .info-list span {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        @media (max-width: 768px) {
+
+            .form-row,
+            .drone-info {
+                grid-template-columns: 1fr;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .title h2 {
+                font-size: 25px;
+            }
+
+            .header h1 {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>🚁 Smart Crop - Drone Monitoring</h1>
+</div>
+
+<div class="container">
+
+    <div class="title">
+        <h2>🚁 Drone-Based Crop Monitoring</h2>
+        <p>
+            Upload an aerial field image and generate a crop monitoring report.
+        </p>
+    </div>
+
+    <!-- Drone Information -->
+    <div class="card">
+
+        <div class="drone-info">
+
+            <div>
+                <h3>Smart Drone Monitoring</h3>
+
+                <ul class="info-list">
+                    <li>🚁 <span>Aerial Monitoring:</span> View field condition from above.</li>
+                    <li>🌱 <span>Crop Health:</span> Monitor overall crop condition.</li>
+                    <li>💧 <span>Water Stress:</span> Identify possible dry areas.</li>
+                    <li>🐛 <span>Pest Risk:</span> Monitor possible pest problems.</li>
+                    <li>📊 <span>Smart Report:</span> Generate a farmer-friendly report.</li>
+                </ul>
+            </div>
+
+            <div>
+                <img
+                    src="../image/dron-crop-analysis.png"
+                    alt="Drone Crop Analysis">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Farm Information -->
+    <div class="card">
+
+        <h3>🌾 Farm Information</h3>
+
+        <div class="form-row">
+
+            <div class="form-group">
+                <label>Farmer Name</label>
+                <input
+                    type="text"
+                    id="farmerName"
+                    placeholder="Enter farmer name">
+            </div>
+
+            <div class="form-group">
+                <label>Gut Number</label>
+                <input
+                    type="text"
+                    id="gutNumber"
+                    placeholder="Enter Gut Number">
+            </div>
+
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-group">
+                <label>Field / Plot Name</label>
+                <input
+                    type="text"
+                    id="fieldName"
+                    placeholder="Enter field name">
+            </div>
+
+            <div class="form-group">
+                <label>Select Crop</label>
+
+                <select id="cropName">
+
+                    <option value="">Select Crop</option>
+                    <option>Wheat</option>
+                    <option>Rice</option>
+                    <option>Sugarcane</option>
+                    <option>Tomato</option>
+                    <option>Onion</option>
+                    <option>Soybean</option>
+                    <option>Cotton</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        <!-- Farm GPS Location -->
+    <div class="card">
+
+        <h3>📍 Farm Location</h3>
+
+        <button
+            type="button"
+            class="btn"
+            onclick="getFarmLocation()">
+            📍 Get Current Location
+        </button>
+
+        <p id="locationStatus"
+           style="margin-top:12px; color:#2e7d32;">
+            Location not captured yet.
+        </p>
+
+        <input type="hidden" id="latitude">
+        <input type="hidden" id="longitude">
+
+    </div>
+
+    <!-- Image Upload -->
+    <div class="card">
+
+        <h3>📷 Upload Drone Field Image</h3>
+
+        <div
+            class="upload-box"
+            onclick="document.getElementById('droneImage').click()">
+
+            <h3>🚁 Upload Aerial Image</h3>
+
+            <p>
+                Select a crop/field image captured by your drone.
+            </p>
+
+            <input
+                type="file"
+                id="droneImage"
+                accept="image/*"
+                onchange="previewImage(event)"
+                hidden>
+
+            <button
+                type="button"
+                class="btn"
+                onclick="event.stopPropagation(); document.getElementById('droneImage').click();">
+
+                📁 Choose Image
+
+            </button>
+
+        </div>
+
+        <div class="image-preview" id="imagePreview">
+
+            <h3>Image Preview</h3>
+
+            <img id="preview" src="" alt="Drone Image Preview">
+
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+
+        <button
+            class="btn"
+            onclick="analyzeCrop()">
+
+            🔍 Analyze Crop
+
+        </button>
+
+        <button
+            class="btn secondary-btn"
+            onclick="resetPage()">
+
+            🔄 Reset
+
+        </button>
+
+        <div class="demo-note">
+            ℹ️ Demo Mode: This version simulates crop monitoring.
+            A real drone and trained AI model can be integrated later.
+        </div>
+
+    </div>
+
+    <!-- Result -->
+    <div class="card result" id="result">
+
+        <div class="status-header">
+
+            <div>
+                <h3>🌱 Drone Crop Monitoring Report</h3>
+                <p id="reportDate"></p>
+            </div>
+
+            <div class="status-badge">
+                ✓ Monitoring Completed
+            </div>
+
+        </div>
+
+        <div class="result-grid">
+
+            <div class="result-box">
+                <h4>🌱 Overall Crop Health</h4>
+                <p id="healthResult">Healthy</p>
+            </div>
+
+            <div class="result-box">
+                <h4>💧 Water Stress</h4>
+                <p id="waterResult">Low</p>
+            </div>
+
+            <div class="result-box">
+                <h4>🐛 Pest Risk</h4>
+                <p id="pestResult">Low</p>
+            </div>
+
+            <div class="result-box">
+                <h4>🦠 Disease Risk</h4>
+                <p id="diseaseResult">Low</p>
+            </div>
+
+            <div class="result-box">
+                <h4>☀️ Dry Area</h4>
+                <p id="dryResult">Low</p>
+            </div>
+
+            <div class="result-box">
+                <h4>📍 Field</h4>
+                <p id="fieldResult">-</p>
+            </div>
+
+        </div>
+
+        <div class="recommendation">
+
+            <h4>💡 Farmer Recommendation</h4>
+
+            <p id="recommendationText">
+                Continue regular irrigation and monitor the crop regularly.
+            </p>
+
+        </div>
+
+        <div style="margin-top:20px;">
+
+            <strong>👨‍🌾 Farmer:</strong>
+            <span id="reportFarmer">-</span>
+
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+
+            <strong>🧾 Gut Number:</strong>
+            <span id="reportGut">-</span>
+
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+
+            <strong>🌾 Crop:</strong>
+            <span id="reportCrop">-</span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function getFarmLocation() {
+
+    const status = document.getElementById("locationStatus");
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "❌ Geolocation is not supported by this browser.";
+
+        return;
+    }
+
+    status.innerText =
+        "📍 Getting your current location...";
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+            document.getElementById("latitude").value =
+                latitude;
+
+            document.getElementById("longitude").value =
+                longitude;
+
+            status.innerText =
+                "✅ Location captured: " +
+                latitude.toFixed(6) +
+                ", " +
+                longitude.toFixed(6);
+        },
+
+        function(error) {
+
+            console.error("Location Error:", error);
+
+            status.innerText =
+                "❌ Location permission denied or unavailable.";
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
+
+function previewImage(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+
+        alert("Please select a valid image.");
+
+        event.target.value = "";
+
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        document.getElementById("preview").src = e.target.result;
+
+        document.getElementById("imagePreview").style.display = "block";
+
+    };
+
+    reader.readAsDataURL(file);
+}
+
+async function analyzeCrop() {
+
+    const farmer = document.getElementById("farmerName").value.trim();
+    const gut = document.getElementById("gutNumber").value.trim();
+    const field = document.getElementById("fieldName").value.trim();
+    const crop = document.getElementById("cropName").value;
+    const image = document.getElementById("droneImage").files[0];
+    const latitude = document.getElementById("latitude").value;
+    const longitude = document.getElementById("longitude").value;
+
+    if (!farmer) {
+        alert("Please enter Farmer Name.");
+        return;
+    }
+
+    if (!gut) {
+        alert("Please enter Gut Number.");
+        return;
+    }
+
+    if (!field) {
+        alert("Please enter Field / Plot Name.");
+        return;
+    }
+
+    if (!crop) {
+        alert("Please select a crop.");
+        return;
+    }
+
+    if (!image) {
+        alert("Please upload a drone image.");
+        return;
+    }
+
+
+    // Demo Analysis
+    const cropHealth = "Healthy";
+    const waterStress = "Low";
+    const pestRisk = "Low";
+    const diseaseRisk = "Low";
+    const dryArea = "Low";
+
+    const recommendation =
+        "The crop appears healthy in this demo analysis. " +
+        "Continue regular irrigation, monitor crop growth " +
+        "and inspect the field regularly for pests or disease.";
+
+
+    // Display report
+    document.getElementById("reportFarmer").innerText = farmer;
+    document.getElementById("reportGut").innerText = gut;
+    document.getElementById("reportCrop").innerText = crop;
+    document.getElementById("fieldResult").innerText = field;
+
+    document.getElementById("healthResult").innerText = cropHealth;
+    document.getElementById("waterResult").innerText = waterStress;
+    document.getElementById("pestResult").innerText = pestRisk;
+    document.getElementById("diseaseResult").innerText = diseaseRisk;
+    document.getElementById("dryResult").innerText = dryArea;
+
+    document.getElementById("recommendationText").innerText =
+        recommendation;
+
+
+    const today = new Date();
+
+    document.getElementById("reportDate").innerText =
+        "Monitoring Date: " +
+        today.toLocaleDateString() +
+        " | Time: " +
+        today.toLocaleTimeString();
+
+
+    // Create form data
+    const formData = new FormData();
+
+    formData.append("farmer_name", farmer);
+    formData.append("gut_number", gut);
+    formData.append("field_name", field);
+    formData.append("crop_name", crop);
+
+    formData.append("drone_image", image);
+
+    formData.append("crop_health", cropHealth);
+    formData.append("water_stress", waterStress);
+    formData.append("pest_risk", pestRisk);
+    formData.append("disease_risk", diseaseRisk);
+    formData.append("dry_area", dryArea);
+    formData.append("recommendation", recommendation);
+    formData.append("latitude", latitude);
+    formData.append("longitude", longitude);
+
+
+   try {
+
+    const response = await fetch("../PHP/upload_drone.php", {
+        method: "POST",
+        body: formData
+    });
+
+    const result = await response.text();
+
+    console.log("Status:", response.status);
+    console.log("Response:", result);
+
+    if (response.status === 405) {
+        alert(
+            "❌ 405 Error\n\n" +
+            "Server is rejecting the POST request.\n\n" +
+            "PHP file path is correct, but Apache is blocking the POST request."
+        );
+        return;
+    }
+
+    if (!response.ok) {
+        alert(
+            "❌ Server Error\n\n" +
+            "Status: " + response.status +
+            "\n\n" +
+            result
+        );
+        return;
+    }
+
+    if (
+        result.includes("ERROR") ||
+        result.includes("Database") ||
+        result.includes("SQL") ||
+        result.includes("Fatal")
+    ) {
+        alert(
+            "❌ PHP Error\n\n" +
+            result
+        );
+        return;
+    }
+
+    alert("✅ Drone Report Saved Successfully!");
+
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("result").scrollIntoView({
+        behavior: "smooth"
+    });
+
+} catch (error) {
+
+    console.error("Upload Error:", error);
+
+    alert(
+        "❌ Connection Error\n\n" +
+        error.message
+    );
+}
+
+}
+function resetPage() {
+
+    document.getElementById("farmerName").value = "";
+    document.getElementById("gutNumber").value = "";
+    document.getElementById("fieldName").value = "";
+    document.getElementById("cropName").value = "";
+    document.getElementById("droneImage").value = "";
+
+    document.getElementById("imagePreview").style.display = "none";
+
+    document.getElementById("result").style.display = "none";
+
+}
+
+</script>
+
+</body>
+</html>
