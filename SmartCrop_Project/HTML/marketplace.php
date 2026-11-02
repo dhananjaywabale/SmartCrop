@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $price = floatval($_POST["price"] ?? 0);
     $unit = trim($_POST["unit"] ?? "");
     $location = trim($_POST["location"] ?? "");
+    $phone = trim($_POST["phone"] ?? "");
     $quality_rating = floatval($_POST["quality_rating"] ?? 0);
     $stock_status = trim($_POST["stock_status"] ?? "");
     $description = trim($_POST["description"] ?? "");
@@ -75,11 +76,22 @@ if (
         $price <= 0 ||
         $unit === "" ||
         $location === "" ||
+        !preg_match('/^[0-9]{10}$/', $phone) ||
         $stock_status === ""
     ) {
         $message = "Please fill all required fields.";
     } 
 else {
+
+    
+$phone_stmt = $conn->prepare(
+    "UPDATE users SET phone = ? WHERE id = ?"
+);
+
+$phone_stmt->bind_param("si", $phone, $seller_id);
+$phone_stmt->execute();
+$phone_stmt->close();
+
 
     $stmt = $conn->prepare("
         INSERT INTO marketplace
@@ -138,7 +150,8 @@ $result = $conn->query("
         m.stock_status,
         m.description,
         m.image_path,
-        u.full_name
+        u.full_name,
+        u.phone
     FROM marketplace m
     LEFT JOIN users u
         ON m.seller_id = u.id
@@ -518,6 +531,22 @@ if ($result) {
 
                     </div>
 
+                    
+<div class="form-group">
+    <label for="phone">Seller Mobile Number</label>
+    <input
+        type="tel"
+        id="phone"
+        name="phone"
+        placeholder="Enter 10 digit mobile number"
+        pattern="[0-9]{10}"
+        maxlength="10"
+        minlength="10"
+        required
+    >
+</div>
+
+
 
                     <div class="form-group">
 
@@ -700,6 +729,29 @@ if ($result) {
                                     $product["full_name"] ?? "Unknown"
                                 );
                                 ?>
+                                
+<?php
+$phone = preg_replace('/\D/', '', $product["phone"] ?? "");
+
+if (strlen($phone) === 10):
+    $whatsapp_number = "91" . $phone;
+?>
+    <p>
+        📞 <a href="tel:<?php echo htmlspecialchars($phone); ?>">
+            Call Seller
+        </a>
+    </p>
+
+    <p>
+        💬 <a href="https://wa.me/<?php echo $whatsapp_number; ?>"
+             target="_blank" rel="noopener noreferrer">
+            WhatsApp Seller
+        </a>
+    </p>
+<?php else: ?>
+    <p>Seller contact number not available.</p>
+<?php endif; ?>
+
 
                             </p>
 
